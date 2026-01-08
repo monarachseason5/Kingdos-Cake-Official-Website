@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Kingdos Cake | Official Global Store</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --maroon: #421131; --pink: #F89CD2; --yellow: #FFD43B; 
+            --lavender: #F3E5F5; --gold: #D4AF37; --white: #ffffff;
+            --accent-blue: #E1F5FE;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Montserrat', sans-serif; background: var(--yellow); color: var(--maroon); overflow-x: hidden; }
+
+        /* REPAIRED HEADER: CENTERED NAME */
+        header { 
+            background: var(--maroon); 
+            padding: 12px 20px; 
+            display: grid; 
+            grid-template-columns: 1fr auto 1fr; 
+            align-items: center; 
+            border-bottom: 3px solid var(--gold); 
+            position: sticky; 
+            top: 0; 
+            z-index: 1000; 
+        }
+        .header-left { display: flex; align-items: center; }
+        .luxury-icon { width: 35px; height: 35px; fill: var(--gold); }
+        
+        .header-title { 
+            color: var(--gold); 
+            font-family: 'Playfair Display'; 
+            font-weight: 900; 
+            letter-spacing: 2px; 
+            font-size: 20px; 
+            text-align: center;
+        }
+        
+        .header-right { display: flex; justify-content: flex-end; }
+        .cart-pill { background: var(--white); color: var(--maroon); padding: 6px 15px; border-radius: 25px; font-weight: 800; font-size: 12px; }
+
+        /* HERO SLIDER */
+        .hero { height: 40vh; position: relative; overflow: hidden; border-bottom: 5px solid var(--gold); }
+        .slide { position: absolute; width: 100%; height: 100%; opacity: 0; transition: 1.5s ease; background-size: cover; background-position: center; }
+        .active { opacity: 1; }
+        .slide-overlay { height: 100%; background: rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; color: white; text-align: center; }
+
+        .promo-bar { background: var(--gold); color: var(--maroon); text-align: center; padding: 10px; font-size: 11px; font-weight: 900; border-bottom: 1px solid rgba(0,0,0,0.1); }
+
+        /* FIRST PAGE SECTIONS */
+        .section-title { text-align: center; padding: 30px 0 15px; font-family: 'Playfair Display'; font-size: 26px; text-transform: uppercase; }
+        .container { padding: 20px 5% 50px; }
+        
+        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+        @media (min-width: 768px) { .grid { grid-template-columns: repeat(4, 1fr); } }
+
+        .card { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); cursor: pointer; position: relative; }
+        .card img { width: 100%; height: 180px; object-fit: cover; }
+        .card-name { padding: 12px; text-align: center; font-weight: 800; font-size: 11px; text-transform: uppercase; }
+        .bogo-badge { position: absolute; top: 10px; left: 10px; background: #ff0000; color: white; padding: 4px 10px; font-size: 9px; font-weight: 900; border-radius: 5px; z-index: 10; }
+
+        /* SECOND PAGE (VIBRANT & INTERACTIVE) */
+        #details-page { display: none; background: #fff; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2000; overflow-y: auto; }
+        .back-nav { padding: 18px; background: var(--maroon); color: var(--gold); font-weight: 800; border: none; width: 100%; text-align: left; cursor: pointer; }
+        .p-image { width: 100%; height: 350px; object-fit: cover; border-bottom: 8px solid var(--pink); }
+        .p-body { padding: 25px; max-width: 600px; margin: auto; padding-bottom: 120px; }
+        .p-price { font-size: 32px; font-weight: 900; color: #ff0066; margin-bottom: 20px; }
+
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 25px; }
+        .info-tile { background: var(--lavender); padding: 15px; border-radius: 12px; border-left: 5px solid var(--maroon); }
+        .tile-label { font-size: 9px; font-weight: 800; color: #777; text-transform: uppercase; }
+        .tile-value { font-size: 14px; font-weight: 700; }
+
+        /* INTERACTIVE BUTTONS */
+        .interactive-btn { border-radius: 12px; padding: 18px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+        .btn-greeting { background: linear-gradient(135deg, #421131, #F89CD2); color: white; }
+        .btn-payment { background: #e8f5e9; color: #1b5e20; border: 2px solid #2e7d32; }
+
+        /* MODAL POPUP */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 3000; align-items: center; justify-content: center; padding: 20px; }
+        .modal-content { background: white; border-radius: 20px; padding: 30px; width: 100%; max-width: 400px; position: relative; text-align: center; }
+        input { width: 100%; padding: 15px; margin: 20px 0; border: 1px solid #ddd; border-radius: 10px; font-size: 16px; }
+
+        .floating-footer { position: fixed; bottom: 0; left: 0; width: 100%; background: white; padding: 15px 25px; border-top: 1px solid #ddd; z-index: 2001; }
+        .add-btn { background: var(--maroon); color: white; width: 100%; padding: 18px; border: none; border-radius: 12px; font-weight: 800; font-size: 16px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-left">
+        <svg class="luxury-icon" viewBox="0 0 24 24"><path d="M5,16L3,5L8.5,10L12,4L15.5,10L21,5L19,16H5M19,19A1,1 0 0,1 18,20H6A1,1 0 0,1 5,19V18H19V19Z" /></svg>
+    </div>
+    <div class="header-title">KINGDOS CAKE</div>
+    <div class="header-right">
+        <div class="cart-pill">🛒 <span id="cartCount">0</span></div>
+    </div>
+</header>
+
+<div id="home-page">
+    <div class="hero">
+        <div class="slide active" style="background-image: url('https://images.unsplash.com/photo-1578985545062-69928b1d9587')"><div class="slide-overlay"><h1>Royal Kingdos</h1></div></div>
+        <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1535254973040-607b474cb8c2')"><div class="slide-overlay"><h1>Pure Indulgence</h1></div></div>
+    </div>
+
+    <div class="promo-bar">🎁 BUY 1 GET 1 FREE ON SIGNATURE • CARDS ACCEPTED 💳</div>
+
+    <h2 class="section-title">Signature Menu</h2>
+    <div class="container" style="background: var(--accent-blue);"><div class="grid" id="sigGrid"></div></div>
+
+    <h2 class="section-title">Luxury Masterpieces</h2>
+    <div class="container" style="background: var(--yellow);"><div class="grid" id="premGrid"></div></div>
+</div>
+
+<div id="details-page">
+    <button class="back-nav" onclick="closeDetails()">← BACK TO MENU</button>
+    <img id="pImg" class="p-image">
+    <div class="p-body">
+        <h1 id="pTitle" style="font-family:'Playfair Display'; margin-bottom:5px;"></h1>
+        <div id="pPrice" class="p-price"></div>
+
+        <div class="info-grid">
+            <div class="info-tile"><div class="tile-label">Cake Base</div><div class="tile-value" id="pBase"></div></div>
+            <div class="info-tile"><div class="tile-label">Servings</div><div class="tile-value" id="pServes"></div></div>
+        </div>
+
+        <div class="interactive-btn btn-greeting" onclick="showModal('greeting')">
+            <div>
+                <div style="font-weight:900; font-size:14px;">✍️ ADD ICING GREETING</div>
+                <div id="greetingDisplay" style="font-size:11px; opacity:0.9;">Click to write your message</div>
+            </div>
+            <div style="font-weight:900;">FREE</div>
+        </div>
+
+        <div class="interactive-btn btn-payment" onclick="showModal('payment')">
+            <div>
+                <div style="font-weight: 800; font-size: 14px;">💳 CARD PAYMENTS</div>
+                <div style="font-size: 11px;">Secure Visa & Mastercard</div>
+            </div>
+            <div style="font-size: 14px; font-weight: 900;">SECURE</div>
+        </div>
+    </div>
+    <div class="floating-footer"><button class="add-btn" onclick="addToCart()">ADD TO SHOPPING CART</button></div>
+</div>
+
+<div id="modalOverlay" class="modal">
+    <div class="modal-content" id="modalContent"></div>
+</div>
+
+<script>
+    let cart = 0;
+    const signature = [
+        {name: "Ribbon Classic", base: "Butter Sponge", serves: "12 Persons", price: "Rs. 3,850", img: "cake7.jpeg", bogo: true},
+        {name: "Chocolate Dream", base: "Dutch Cocoa", serves: "10 Persons", price: "Rs. 4,500", img: "https://images.unsplash.com/photo-1578985545062-69928b1d9587", bogo: true},
+        {name: "Red Velvet Royale", base: "Velvet Mix", serves: "8 Persons", price: "Rs. 5,200", img: "https://images.unsplash.com/photo-1616541823729-00fe0aacd32c", bogo: true},
+        {name: "Berry Bliss", base: "Strawberry", serves: "10 Persons", price: "Rs. 4,900", img: "https://images.unsplash.com/photo-1464347744102-11db6282f854", bogo: true},
+        {name: "Coffee Gala", base: "Espresso", serves: "10 Persons", price: "Rs. 3,950", img: "cake1.jpeg", bogo: true},
+        {name: "Vanilla Dream", base: "Vanilla", serves: "12 Persons", price: "Rs. 3,200", img: "https://images.unsplash.com/photo-1488477181946-6428a0291777", bogo: true},
+        {name: "Oreo Gala", base: "Cookie Cream", serves: "12 Persons", price: "Rs. 5,100", img: "cake13.jpeg", bogo: true},
+        {name: "Minty Dark", base: "Dark Choco", serves: "10 Persons", price: "Rs. 4,300", img: "cake9.jpeg", bogo: true},
+        {name: "Salted Caramel", base: "Toffee", serves: "10 Persons", price: "Rs. 4,800", img: "https://images.unsplash.com/photo-1550617931-e17a7b70dce2", bogo: true},
+        {name: "Lemon Zest", base: "Citrus", serves: "8 Persons", price: "Rs. 3,500", img: "cake11.jpeg", bogo: true}
+    ];
+
+    const luxury = [
+        {name: "24K Gold Cake", base: "Gold Leaf", serves: "20 Persons", price: "Rs. 18,500", img: "https://images.unsplash.com/photo-1588195538326-c5b1e9f80a1b", bogo: false},
+        {name: "Royal Wedding", base: "Almond Fruit", serves: "50+ Persons", price: "Rs. 45,000", img: "cake12.jpeg", bogo: false},
+        {name: "Midnight Forest", base: "Black Cherry", serves: "15 Persons", price: "Rs. 11,000", img: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c", bogo: false},
+        {name: "Tiffany Blue", base: "Ganache", serves: "12 Persons", price: "Rs. 14,500", img: "cake17.jpeg", bogo: false},
+        {name: "Exotic Mango", base: "Alphonso", serves: "12 Persons", price: "Rs. 8,500", img: "cake6.jpeg", bogo: false},
+        {name: "Pistachio Rose", base: "Persian Nut", serves: "12 Persons", price: "Rs. 14,000", img: "cake2.jpeg", bogo: false},
+        {name: "Nutty Nutella", base: "Hazelnut", serves: "10 Persons", price: "Rs. 9,400", img: "https://images.unsplash.com/photo-1506459225024-1428097a7e18", bogo: false},
+        {name: "White Velvet", base: "Ivory", serves: "10 Persons", price: "Rs. 7,200", img: "https://images.unsplash.com/photo-1559620192-032c4bc4674e", bogo: false},
+        {name: "Blueberry Hill", base: "Wild Berry", serves: "10 Persons", price: "Rs. 7,800", img: "cake14.jpeg", bogo: false},
+        {name: "Opera Classic", base: "Coffee Almond", serves: "10 Persons", price: "Rs. 8,900", img: "cake15.jpeg", bogo: false}
+    ];
+
+    function load(data, id) {
+        const g = document.getElementById(id);
+        data.forEach(c => {
+            const d = document.createElement('div');
+            d.className = 'card';
+            d.onclick = () => {
+                document.getElementById('pTitle').innerText = c.name;
+                document.getElementById('pBase').innerText = c.base;
+                document.getElementById('pServes').innerText = c.serves;
+                document.getElementById('pPrice').innerText = c.price;
+                document.getElementById('pImg').src = c.img;
+                document.getElementById('home-page').style.display = 'none';
+                document.getElementById('details-page').style.display = 'block';
+                window.scrollTo(0,0);
+            };
+            d.innerHTML = `${c.bogo ? '<div class="bogo-badge">BUY 1 GET 1 FREE</div>' : ''}<img src="${c.img}"><div class="card-name">${c.name}</div>`;
+            g.appendChild(d);
+        });
+    }
+
+    function showModal(type) {
+        const modal = document.getElementById('modalOverlay');
+        const content = document.getElementById('modalContent');
+        modal.style.display = 'flex';
+        if(type === 'greeting') {
+            content.innerHTML = `<h3>Cake Message</h3><input type="text" id="msgI" placeholder="Happy Birthday..."><button class="add-btn" onclick="saveM()">SAVE MESSAGE</button>`;
+        } else {
+            content.innerHTML = `<h3>Secure Checkout</h3><p>Payments via Credit/Debit card are encrypted.</p><br><button class="add-btn" onclick="closeModal()">OK</button>`;
+        }
+    }
+
+    function saveM() {
+        const v = document.getElementById('msgI').value;
+        if(v) document.getElementById('greetingDisplay').innerText = "Message: " + v;
+        closeModal();
+    }
+
+    function closeModal() { document.getElementById('modalOverlay').style.display = 'none'; }
+    function closeDetails() { document.getElementById('home-page').style.display = 'block'; document.getElementById('details-page').style.display = 'none'; }
+    function addToCart() { cart++; document.getElementById('cartCount').innerText = cart; alert("Added to cart!"); closeDetails(); }
+
+    load(signature, 'sigGrid'); load(luxury, 'premGrid');
+    let idx = 0; const slides = document.querySelectorAll('.slide');
+    setInterval(() => { slides[idx].classList.remove('active'); idx = (idx + 1) % slides.length; slides[idx].classList.add('active'); }, 4000);
+</script>
+</body>
+</html>
